@@ -130,8 +130,7 @@ onetime_run () {
 }
 
 install_stage () {
-  for i in "${STAGE_SERVERS[@]}"
-  do
+  for i in "${STAGE_SERVERS[@]}"; do
     if [ "${CONFIRM}" ==  "true" ]; then
       read -p "Would you like to connect to \"${i}\" and continue? " -n 1 -r
       echo
@@ -145,8 +144,7 @@ install_stage () {
 }
 
 install_prod () {
-  for i in "${PROD_SERVERS[@]}"
-  do
+  for i in "${PROD_SERVERS[@]}"; do
     if [ "${CONFIRM}" ==  "true" ]; then
       read -p "Would you like to connect to \"${i}\" and continue? " -n 1 -r
       echo
@@ -160,8 +158,7 @@ install_prod () {
 }
 
 install_test () {
-  for i in "${TEST_SERVER[@]}"
-  do
+  for i in "${TEST_SERVER[@]}"; do
     if [ "${CONFIRM}" ==  "true" ]; then
       read -p "Would you like to connect to \"${i}\" and continue? " -n 1 -r
       echo
