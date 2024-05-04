@@ -21,8 +21,7 @@ PASSWORD=""
 # Loop through each subdomain. If the domain's
 #  IP is different than my current public IP,
 #  update the IP address.
-for i in "${SUB_DOMAINS[@]}"
-do
+for i in "${SUB_DOMAINS[@]}"; do
     SUB_DOMAIN_IP="$(dig $i.${DOMAIN} +short)"
 
     if [ "${SUB_DOMAIN_IP}" != "${CURRENT_PUBLIC_IP}" ]; then
