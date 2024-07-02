@@ -30,7 +30,7 @@ directory_file_count_limit=25
 
 main () {
   local i=0
-  echo directory_file_count_limit: $directory_file_count_limit
+
   cd "$movie_root"
 
   # Red Color
@@ -103,24 +103,18 @@ while getopts ":c:d:h" opt; do
     c )
       opt_c=1
       directory_file_count_limit=${OPTARG}
-      # if [ "${directory_file_count_limit}" != "-h" ]; then
-      # echo hi-1
-      #   if [[ ! ${directory_file_count_limit} =~ ^[0-9]+$ ]]; then
       if [[ ( ! ${directory_file_count_limit} =~ ^[0-9]+$ ) && ( "${directory_file_count_limit}" != "-h" ) ]]; then
-          echo hi-2
-          echo "[!]  ${OPTARG} is an invalid argument" 1>&2
-          echo "[!]  a file count (number) must be specified when using the -c options"
-          echo
-          usage
-          exit 1
-        # fi
+        echo "[!]  ${OPTARG} is an invalid argument" 1>&2
+        echo "[!]  a file count (number) must be specified when using the -c options"
+        echo
+        usage
+        exit 1
       fi
       ;;
     d )
       opt_d=1
       movie_root="${OPTARG}"
       if [[ ! -d "${movie_root}" && "${movie_root}" != "-h" ]]; then
-        echo hi-3
         echo "[!]  '${movie_root}' is not a valid directory"
         echo
         usage
@@ -134,25 +128,18 @@ while getopts ":c:d:h" opt; do
     : )
       echo "illegal option -- ${OPTARG} requires an argument" 1>&2
       if [[ "${OPTARG}" == "d" ]]; then
-        echo hi-4
         echo "[!]  a directory must be specified when using the -d option"
         echo
       elif [[ "${OPTARG}" == "c" ]]; then
-        echo hi-5
         echo "[!]  a file count (number) must be specified when using the -c option"
         echo
       else
-        echo hi-6
         echo
       fi
       usage
       exit 1
       ;;
-    \? )
-      echo unkonw
-      ;;
     * )
-      echo hi-7
       echo "illegal option -- ${OPTARG}" 1>&2
       echo
       usage
@@ -162,67 +149,27 @@ while getopts ":c:d:h" opt; do
 done
 shift $((OPTIND -1))
 
-echo opt_c: $opt_c
-echo opt_d: $opt_d
-echo opt_h: $opt_h
-echo movie_root: "$movie_root"
-echo directory_file_count_limit: $directory_file_count_limit
-echo
 
-echo dollar-hash: $#
 # decision logic
 if [[ $# -eq 0 || $# -gt 0 ]]; then
-  echo "[!]  invalid"
+  echo "[!]  illegal operation"
   echo
   usage
   exit 1
 elif [[ ${opt_h} -ne 1 && ( "${movie_root}" == "-h" || "${directory_file_count_limit}" == "-h" )  ]]; then
   if [[ ${opt_d} -eq 1 ]]; then
-    echo hi-8
     echo "usage: ./create_movie_dirs.sh -d <directorys>"
     echo "   -d <directory>     Set the movie directory on which the script should process."
     echo
   elif [[ ${opt_c} -eq 1 ]]; then
-    echo hi-9
     echo "usage: ./create_movie_dirs.sh -d <directory>"
     echo "   [-c <file count>]     Set the number of files to process. Default is 15."
     echo
   fi
-# elif [[ ${opt_h} -ne 1 ]]; then
-#   echo no
 elif [[ ( ${opt_d} && "${movie_root}" != "-h" ) || ( ${opt_c} && "${directory_file_count_limit}" != "-h" ) ]]; then
-  echo hi-10
   main
 elif [[ ${opt_c} && "${directory_file_count_limit}" == "-h" ]]; then
-  echo hi-11
   echo "usage: ./create_movie_dirs.sh -d <directory>"
   echo "   [-c <file count>]     Set the number of files to process. Default is 15."
   echo
 fi
-
-
-# echo dollar-hash: $#
-# ## decision logic
-# if [[ ${opt_h} -ne 1 && ( "${movie_root}" == "-h" || "${directory_file_count_limit}" == "-h" )  ]]; then
-#   if [[ ${opt_d} -eq 1 ]]; then
-#     echo hi-8
-#     echo "usage: ./create_movie_dirs.sh -d <directorys>"
-#     echo "   -d <directory>     Set the movie directory on which the script should process."
-#     echo
-#   elif [[ ${opt_c} -eq 1 ]]; then
-#     echo hi-9
-#     echo "usage: ./create_movie_dirs.sh -d <directory>"
-#     echo "   [-c <file count>]     Set the number of files to process. Default is 15."
-#     echo
-#   fi
-# elif [[ ${opt_h} -ne 1 ]]; then
-#   echo no
-# elif [[ ( ${opt_d} && "${movie_root}" != "-h" ) || ( ${opt_c} && "${directory_file_count_limit}" != "-h" ) ]]; then
-#   echo hi-10
-#   main
-# elif [[ ${opt_c} && "${directory_file_count_limit}" == "-h" ]]; then
-#   echo hi-11
-#   echo "usage: ./create_movie_dirs.sh -d <directory>"
-#   echo "   [-c <file count>]     Set the number of files to process. Default is 15."
-#   echo
-# fi
