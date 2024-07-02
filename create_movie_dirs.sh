@@ -20,6 +20,7 @@
 # - add option for extensions to process
 
 
+
 ## OPTIONS
 opt_d=0
 opt_c=0
@@ -29,7 +30,7 @@ directory_file_count_limit=15
 
 main () {
   local i=0
-
+  echo directory_file_count_limit: $directory_file_count_limit
   cd "$movie_root"
 
   # Red Color
@@ -104,6 +105,7 @@ while getopts ":c:d:h" opt; do
       directory_file_count_limit=${OPTARG}
       if [ "${directory_file_count_limit}" != "-h" ]; then
         if [[ ! ${directory_file_count_limit} =~ ^[0-9]+$ ]]; then
+          echo "illegal option -- ${OPTARG} requires an argument" 1>&2
           echo "[!]  a file count (number) must be specified when using the -c options"
           echo
           usage
@@ -164,4 +166,8 @@ if [[ ${opt_h} -ne 1 ]]; then
   elif [[ (${opt_c} || ${opt_d}) ]]; then
     main
   fi
+elif [[ ${opt_d} -ne 1 ]]; then
+  echo "[!]  you must set a directory by using the -d option"
+  echo
+  usage
 fi
