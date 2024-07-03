@@ -8,12 +8,12 @@
 #usage: ./create_movie_dirs.sh -d <directory> [-c <count>] [-h]
 #
 #     ./create_movie_dirs.sh -d <directory>     Set the movie directory on which the script should process.
-#     ./create_movie_dirs.sh [-c <count>]       Set the number of files to process. Default is 15.
+#     ./create_movie_dirs.sh [-c <count>]       Set the number of files to process. Default is 25.
 #     ./create_movie_dirs.sh [-h]               Display this help message.
 #
 #     Examples:
 #               ./create_movie_dirs.sh -d ~/my_movies
-#               ./create_movie_dirs.sh -d ~/my_movies -c 25
+#               ./create_movie_dirs.sh -d ~/my_movies -c 15
 #
 #TODO:
 # - add option for extensions to process
@@ -87,12 +87,12 @@ usage () {
   echo "Usage: ${0} -d <directory> [-c <count>] [-h]"
   echo
   echo "    ${0} -d <directory>     Set the movie directory on which the script should process."
-  echo "    ${0} [-c <count>]       Set the number of files to process. Default is 15."
+  echo "    ${0} [-c <count>]       Set the number of files to process. Default is 25."
   echo "    ${0} [-h]               Display this help message."
   echo
   echo "    Examples:"
   echo "              ${0} -d ~/my_movies"
-  echo "              ${0} -d ~/my_movies -c 25"
+  echo "              ${0} -d ~/my_movies -c 15"
 }
 
 while getopts "c:d:h" opt; do
