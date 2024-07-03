@@ -4,7 +4,7 @@
 #description    :This script reorganizes/moves movie files organized in a single directory to their own directory.
 #author         :J.D. Stone
 #date           :20240702
-#version        :2.1.1
+#version        :2.2.1
 #usage: ./create_movie_dirs.sh -d <directory> [-c <count>] [-h]
 #
 #     ./create_movie_dirs.sh -d <directory>     Set the movie directory on which the script should process.
@@ -14,29 +14,27 @@
 #     Examples:
 #               ./create_movie_dirs.sh -d ~/my_movies
 #               ./create_movie_dirs.sh -d ~/my_movies -c 25
-#==============================================================================
-
-# TODO
+#
+#TODO:
 # - add option for extensions to process
-
+#==============================================================================
 
 
 ## OPTIONS
 opt_d=0
 opt_c=0
-opt_h=0
+# opt_h=0
 ## SET A LIMIT FOR HOW MANY FILES YOU WANT TO PROCESS PER RUN
 directory_file_count_limit=25
+# Red Color
+RED='\033[0;31m'
+# No Color
+NC='\033[0m'
 
 main () {
   local i=0
 
   cd "$movie_root"
-
-  # Red Color
-  RED='\033[0;31m'
-  # No Color
-  NC='\033[0m'
 
   echo
   printf "${RED}!!!!  $(pwd) -- Are you sure you want to continue with this movie directory?  !!!!${NC}\n"
@@ -87,25 +85,26 @@ main () {
 }
 
 usage () {
-  echo "Usage: ./create_movie_dirs.sh -d <directory> [-c <count>] [-h]"
+  echo "Usage: ${0} -d <directory> [-c <count>] [-h]"
   echo
-  echo "    ./create_movie_dirs.sh -d <directory>     Set the movie directory on which the script should process."
-  echo "    ./create_movie_dirs.sh [-c <count>]       Set the number of files to process. Default is 15."
-  echo "    ./create_movie_dirs.sh [-h]               Display this help message."
+  echo "    ${0} -d <directory>     Set the movie directory on which the script should process."
+  echo "    ${0} [-c <count>]       Set the number of files to process. Default is 15."
+  echo "    ${0} [-h]               Display this help message."
   echo
   echo "    Examples:"
-  echo "              ./create_movie_dirs.sh -d ~/my_movies"
-  echo "              ./create_movie_dirs.sh -d ~/my_movies -c 25"
+  echo "              ${0} -d ~/my_movies"
+  echo "              ${0} -d ~/my_movies -c 25"
 }
 
-while getopts ":c:d:h" opt; do
+while getopts "c:d:h" opt; do
+# while getopts ":c:d:h" opt; do
   case ${opt} in
     c )
       opt_c=1
       directory_file_count_limit=${OPTARG}
-      if [[ ( ! ${directory_file_count_limit} =~ ^[0-9]+$ ) && ( "${directory_file_count_limit}" != "-h" ) ]]; then
-        echo "[!]  ${OPTARG} is an invalid argument" 1>&2
-        echo "[!]  a file count (number) must be specified when using the -c options"
+      if [[ ( ! ${directory_file_count_limit} =~ ^[0-9]+$ ) ]]; then
+        printf "${RED}[!]${NC}  ${OPTARG} is an invalid argument for option -${opt}\n" 1>&2
+        printf "${RED}[!]${NC}  a file count (number) must be specified when using the -${opt} option\n"
         echo
         usage
         exit 1
@@ -114,24 +113,24 @@ while getopts ":c:d:h" opt; do
     d )
       opt_d=1
       movie_root="${OPTARG}"
-      if [[ ! -d "${movie_root}" && "${movie_root}" != "-h" ]]; then
-        echo "[!]  '${movie_root}' is not a valid directory"
+      if [[ ! -d "${movie_root}" ]]; then
+        printf "${RED}[!]${NC}  '${movie_root}' is not a valid directory\n"
         echo
         usage
         exit 1
       fi
       ;;
-    h )
-      opt_h=1
-      usage
-      ;;
+    # h )
+    #   opt_h=1
+    #   usage
+    #   ;;
     : )
       echo "illegal option -- ${OPTARG} requires an argument" 1>&2
       if [[ "${OPTARG}" == "d" ]]; then
-        echo "[!]  a directory must be specified when using the -d option"
+        printf "${RED}[!]${NC}  a directory must be specified when using the -${opt} option\n"
         echo
       elif [[ "${OPTARG}" == "c" ]]; then
-        echo "[!]  a file count (number) must be specified when using the -c option"
+        printf "${RED}[!]${NC}  a file count (number) must be specified when using the -${opt} option\n"
         echo
       else
         echo
@@ -139,37 +138,50 @@ while getopts ":c:d:h" opt; do
       usage
       exit 1
       ;;
-    * )
-      echo "illegal option -- ${OPTARG}" 1>&2
+    * | h )
+      # echo "illegal option -- ${OPTARG}" 1>&2
       echo
       usage
-      exit 1
+      exit 0
       ;;
   esac
 done
 shift $((OPTIND -1))
 
-
 # decision logic
-if [[ $# -eq 0 || $# -gt 0 ]]; then
-  echo "[!]  illegal operation"
-  echo
-  usage
-  exit 1
-elif [[ ${opt_h} -ne 1 && ( "${movie_root}" == "-h" || "${directory_file_count_limit}" == "-h" )  ]]; then
-  if [[ ${opt_d} -eq 1 ]]; then
-    echo "usage: ./create_movie_dirs.sh -d <directorys>"
-    echo "   -d <directory>     Set the movie directory on which the script should process."
-    echo
-  elif [[ ${opt_c} -eq 1 ]]; then
-    echo "usage: ./create_movie_dirs.sh -d <directory>"
-    echo "   [-c <file count>]     Set the number of files to process. Default is 15."
-    echo
-  fi
-elif [[ ( ${opt_d} && "${movie_root}" != "-h" ) || ( ${opt_c} && "${directory_file_count_limit}" != "-h" ) ]]; then
+if [[ ${opt_d} == 1 ]]; then
+  echo opt_d: $opt_d
+  echo movie_root: $movie_root
+  echo directory_file_count_limit: $directory_file_count_limit
   main
-elif [[ ${opt_c} && "${directory_file_count_limit}" == "-h" ]]; then
-  echo "usage: ./create_movie_dirs.sh -d <directory>"
-  echo "   [-c <file count>]     Set the number of files to process. Default is 15."
-  echo
+elif [[ ( $# -eq 0 || $# -gt 0 ) || ( ! ${opt_d} ) ]]; then
+# if [[ -z "${d}" ]]; then
+  # echo "[!]  illegal operation"
+  echo ds1
+  echo $#
+  usage
+  exit 0
 fi
+
+
+# # decision logic
+# if [[ ( $# -eq 0 || $# -gt 0 ) || ( ! ${opt_d} ) ]]; then
+# # if [[ -z "${d}" ]]; then
+#   # echo "[!]  illegal operation"
+#   echo ds1
+#   echo $#
+#   usage
+#   exit 0
+# # # elif [[ ${opt_h} -ne 1 && ( "${movie_root}" == "-h" || "${directory_file_count_limit}" == "-h" )  ]]; then
+# elif [[ ${opt_d} == 1 ]]; then
+#   echo opt_d: $opt_d
+#   echo movie_root: $movie_root
+#   echo directory_file_count_limit: $directory_file_count_limit
+#   main
+# # elif [[ $# -eq 0 || $# -gt 0 ]]; then
+# # # if [[ -z "${d}" ]]; then
+# #   # echo "[!]  illegal operation"
+# #   echo ds2
+# #   usage
+# #   exit 0
+# fi
