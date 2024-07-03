@@ -5,7 +5,7 @@
 #author         :J.D. Stone
 #date           :20240702
 #version        :2.2.1
-#usage: ./create_movie_dirs.sh -d <directory> [-c <count>] [-h]
+#usage:         :./create_movie_dirs.sh -d <directory> [-c <count>] [-h]
 #
 #     ./create_movie_dirs.sh -d <directory>     Set the movie directory on which the script should process.
 #     ./create_movie_dirs.sh [-c <count>]       Set the number of files to process. Default is 25.
@@ -20,14 +20,14 @@
 #==============================================================================
 
 
-## OPTIONS
+## CLI Options
 opt_d=0
 opt_c=0
-## SET A LIMIT FOR HOW MANY FILES YOU WANT TO PROCESS PER RUN
+## Set a limit for how many files you want to process per run
 directory_file_count_limit=25
-# Red Color
+## Red Color
 RED='\033[0;31m'
-# No Color
+## No Color
 NC='\033[0m'
 
 main () {
@@ -141,7 +141,7 @@ while getopts "c:d:h" opt; do
 done
 shift $((OPTIND -1))
 
-# decision logic
+## decision logic
 if [[ ${opt_d} == 1 ]]; then
   main
 elif [[ ( $# -eq 0 || $# -gt 0 ) || ( ! ${opt_d} ) ]]; then
