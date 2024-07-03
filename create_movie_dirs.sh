@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 #title          :create_movie_dirs.sh
-#description    :This script reorganizes/moves movie files organized in a single directory to their own directory.
+#description    :This script reorganizes/moves movie (and associated) files organized in a single directory to their own directory.
 #author         :J.D. Stone
 #date           :20240702
 #version        :2.2.1
@@ -23,7 +23,6 @@
 ## OPTIONS
 opt_d=0
 opt_c=0
-# opt_h=0
 ## SET A LIMIT FOR HOW MANY FILES YOU WANT TO PROCESS PER RUN
 directory_file_count_limit=25
 # Red Color
@@ -97,7 +96,6 @@ usage () {
 }
 
 while getopts "c:d:h" opt; do
-# while getopts ":c:d:h" opt; do
   case ${opt} in
     c )
       opt_c=1
@@ -120,10 +118,6 @@ while getopts "c:d:h" opt; do
         exit 1
       fi
       ;;
-    # h )
-    #   opt_h=1
-    #   usage
-    #   ;;
     : )
       echo "illegal option -- ${OPTARG} requires an argument" 1>&2
       if [[ "${OPTARG}" == "d" ]]; then
@@ -139,7 +133,6 @@ while getopts "c:d:h" opt; do
       exit 1
       ;;
     * | h )
-      # echo "illegal option -- ${OPTARG}" 1>&2
       echo
       usage
       exit 0
@@ -150,38 +143,9 @@ shift $((OPTIND -1))
 
 # decision logic
 if [[ ${opt_d} == 1 ]]; then
-  echo opt_d: $opt_d
-  echo movie_root: $movie_root
-  echo directory_file_count_limit: $directory_file_count_limit
   main
 elif [[ ( $# -eq 0 || $# -gt 0 ) || ( ! ${opt_d} ) ]]; then
-# if [[ -z "${d}" ]]; then
-  # echo "[!]  illegal operation"
-  echo ds1
-  echo $#
   usage
   exit 0
 fi
 
-
-# # decision logic
-# if [[ ( $# -eq 0 || $# -gt 0 ) || ( ! ${opt_d} ) ]]; then
-# # if [[ -z "${d}" ]]; then
-#   # echo "[!]  illegal operation"
-#   echo ds1
-#   echo $#
-#   usage
-#   exit 0
-# # # elif [[ ${opt_h} -ne 1 && ( "${movie_root}" == "-h" || "${directory_file_count_limit}" == "-h" )  ]]; then
-# elif [[ ${opt_d} == 1 ]]; then
-#   echo opt_d: $opt_d
-#   echo movie_root: $movie_root
-#   echo directory_file_count_limit: $directory_file_count_limit
-#   main
-# # elif [[ $# -eq 0 || $# -gt 0 ]]; then
-# # # if [[ -z "${d}" ]]; then
-# #   # echo "[!]  illegal operation"
-# #   echo ds2
-# #   usage
-# #   exit 0
-# fi
