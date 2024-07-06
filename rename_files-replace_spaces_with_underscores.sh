@@ -10,6 +10,6 @@ SCRIPT_FILENAME=$(basename "$0")
 
 for file in *; do
   if [ "$file" != "${SCRIPT_FILENAME}" ]; then
-    mv "$file" `echo $file | tr ' ' '_'`
+    mv "$file" "$(echo "$file" | tr ' ' '_')"
   fi
 done

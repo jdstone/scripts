@@ -52,58 +52,58 @@ downloadLog () {
   local HOST_NAME=$1
   local ENV=$2
 
-  ssh -T $HOST_NAME <<-ENDSSH
+  ssh -T "$HOST_NAME" <<-"ENDSSH"
 sudo tail -n 600 /var/log/chef/client.log > ${HOST_NAME}_chef_client_run_log.txt
 ENDSSH
   if [ "${ENV}" == "stage" ] || [ "${ENV}" == "test" ]; then
     if [ "${INSTALL}" == "true" ]; then
-      scp $HOST_NAME:${HOST_NAME}_chef_client_install_log.txt ${STAGE_LOG_DIR_UP}/
+      scp "$HOST_NAME":"${HOST_NAME}_chef_client_install_log.txt" "${STAGE_LOG_DIR_UP}"/
       if [ "${WHY_RUN}" == "true" ]; then
-        scp $HOST_NAME:${HOST_NAME}_chef_client_manual_why_run_log.txt ${STAGE_LOG_DIR_UP}/
+        scp "$HOST_NAME":"${HOST_NAME}_chef_client_manual_why_run_log.txt" "${STAGE_LOG_DIR_UP}"/
       else
-        scp $HOST_NAME:${HOST_NAME}_chef_client_run_log.txt ${STAGE_LOG_DIR_UP}/
-        scp $HOST_NAME:${HOST_NAME}_chef_client_manual_run_log.txt ${STAGE_LOG_DIR_UP}/
+        scp "$HOST_NAME":"${HOST_NAME}_chef_client_run_log.txt" "${STAGE_LOG_DIR_UP}"/
+        scp "$HOST_NAME":"${HOST_NAME}_chef_client_manual_run_log.txt" "${STAGE_LOG_DIR_UP}"/
       fi
     else
       if [ "${WHY_RUN}" == "true" ]; then
-        scp $HOST_NAME:${HOST_NAME}_chef_client_manual_why_run_log.txt ${STAGE_LOG_DIR_RUN}/
+        scp "$HOST_NAME":"${HOST_NAME}_chef_client_manual_why_run_log.txt" "${STAGE_LOG_DIR_RUN}"/
       else
-        scp $HOST_NAME:${HOST_NAME}_chef_client_run_log.txt ${STAGE_LOG_DIR_RUN}/
-        scp $HOST_NAME:${HOST_NAME}_chef_client_manual_run_log.txt ${STAGE_LOG_DIR_RUN}/
+        scp "$HOST_NAME":"${HOST_NAME}_chef_client_run_log.txt" "${STAGE_LOG_DIR_RUN}"/
+        scp "$HOST_NAME":"${HOST_NAME}_chef_client_manual_run_log.txt" "${STAGE_LOG_DIR_RUN}"/
       fi
     fi
   elif [ "${ENV}" == "prod" ]; then
     if [ "${INSTALL}" == "true" ]; then
-      scp $HOST_NAME:${HOST_NAME}_chef_client_install_log.txt ${PROD_LOG_DIR_UP}/
+      scp "$HOST_NAME":"${HOST_NAME}_chef_client_install_log.txt" "${PROD_LOG_DIR_UP}"/
       if [ "${WHY_RUN}" == "true" ]; then
-        scp $HOST_NAME:${HOST_NAME}_chef_client_manual_why_run_log.txt ${PROD_LOG_DIR_UP}/
+        scp "$HOST_NAME":"${HOST_NAME}_chef_client_manual_why_run_log.txt" "${PROD_LOG_DIR_UP}"/
       else
-        scp $HOST_NAME:${HOST_NAME}_chef_client_run_log.txt ${PROD_LOG_DIR_UP}/
-        scp $HOST_NAME:${HOST_NAME}_chef_client_manual_run_log.txt ${PROD_LOG_DIR_UP}/
+        scp "$HOST_NAME":"${HOST_NAME}_chef_client_run_log.txt" "${PROD_LOG_DIR_UP}"/
+        scp "$HOST_NAME":"${HOST_NAME}_chef_client_manual_run_log.txt" "${PROD_LOG_DIR_UP}"/
       fi
     else
       if [ "${WHY_RUN}" == "true" ]; then
-        scp $HOST_NAME:${HOST_NAME}_chef_client_manual_why_run_log.txt ${PROD_LOG_DIR_RUN}/
+        scp "$HOST_NAME":"${HOST_NAME}_chef_client_manual_why_run_log.txt" "${PROD_LOG_DIR_RUN}"/
       else
-        scp $HOST_NAME:${HOST_NAME}_chef_client_run_log.txt ${PROD_LOG_DIR_RUN}/
-        scp $HOST_NAME:${HOST_NAME}_chef_client_manual_run_log.txt ${PROD_LOG_DIR_RUN}/
+        scp "$HOST_NAME":"${HOST_NAME}_chef_client_run_log.txt" "${PROD_LOG_DIR_RUN}"/
+        scp "$HOST_NAME":"${HOST_NAME}_chef_client_manual_run_log.txt" "${PROD_LOG_DIR_RUN}"/
       fi
     fi
   elif [ "${ENV}" == "single" ]; then
     if [ "${INSTALL}" == "true" ]; then
-      scp $HOST_NAME:${HOST_NAME}_chef_client_install_log.txt ${SINGLE_RUN_LOG_DIR_UP}/
+      scp "$HOST_NAME":"${HOST_NAME}_chef_client_install_log.txt" "${SINGLE_RUN_LOG_DIR_UP}"/
       if [ "${WHY_RUN}" == "true" ]; then
-        scp $HOST_NAME:${HOST_NAME}_chef_client_manual_why_run_log.txt ${SINGLE_RUN_LOG_DIR_UP}/
+        scp "$HOST_NAME":"${HOST_NAME}_chef_client_manual_why_run_log.txt" "${SINGLE_RUN_LOG_DIR_UP}"/
       else
-        scp $HOST_NAME:${HOST_NAME}_chef_client_run_log.txt ${SINGLE_RUN_LOG_DIR_UP}/
-        scp $HOST_NAME:${HOST_NAME}_chef_client_manual_run_log.txt ${SINGLE_RUN_LOG_DIR_UP}/
+        scp "$HOST_NAME":"${HOST_NAME}_chef_client_run_log.txt" "${SINGLE_RUN_LOG_DIR_UP}"/
+        scp "$HOST_NAME":"${HOST_NAME}_chef_client_manual_run_log.txt" "${SINGLE_RUN_LOG_DIR_UP}"/
       fi
     else
       if [ "${WHY_RUN}" == "true" ]; then
-        scp $HOST_NAME:${HOST_NAME}_chef_client_manual_why_run_log.txt ${SINGLE_RUN_LOG_DIR_UP}/
+        scp "$HOST_NAME":"${HOST_NAME}_chef_client_manual_why_run_log.txt" "${SINGLE_RUN_LOG_DIR_UP}"/
       else
-        scp $HOST_NAME:${HOST_NAME}_chef_client_run_log.txt ${SINGLE_RUN_LOG_DIR_RUN}/
-        scp $HOST_NAME:${HOST_NAME}_chef_client_manual_run_log.txt ${SINGLE_RUN_LOG_DIR_RUN}/
+        scp "$HOST_NAME":"${HOST_NAME}_chef_client_run_log.txt" "${SINGLE_RUN_LOG_DIR_RUN}"/
+        scp "$HOST_NAME":"${HOST_NAME}_chef_client_manual_run_log.txt" "${SINGLE_RUN_LOG_DIR_RUN}"/
       fi
     fi
   fi
@@ -112,7 +112,7 @@ ENDSSH
 cleanup () {
   local HOST_NAME=$1
 
-  ssh -T $HOST_NAME <<-ENDSSH
+  ssh -T "$HOST_NAME" <<-"ENDSSH"
 rm -rf chef_install/ ${HOST_NAME}_chef_client_run_log.txt ${HOST_NAME}_chef_client_install_log.txt ${HOST_NAME}_chef_client_manual_why_run_log.txt ${HOST_NAME}_chef_client_manual_run_log.txt
 ENDSSH
 }
@@ -122,10 +122,10 @@ onetime_run () {
     read -p "Would you like to connect to \"${SERVER}\" and continue? " -n 1 -r
     echo
     if [[ $REPLY =~ ^[Yy]$ ]]; then
-      run_main_content $SERVER "single"
+      run_main_content "$SERVER" "single"
     fi
   else
-    run_main_content $SERVER "single"
+    run_main_content "$SERVER" "single"
   fi
 }
 
@@ -135,10 +135,10 @@ install_stage () {
       read -p "Would you like to connect to \"${i}\" and continue? " -n 1 -r
       echo
       if [[ $REPLY =~ ^[Yy]$ ]]; then
-        run_main_content $i "stage"
+        run_main_content "$i" "stage"
       fi
     else
-      run_main_content $i "stage"
+      run_main_content "$i" "stage"
     fi
   done
 }
@@ -149,10 +149,10 @@ install_prod () {
       read -p "Would you like to connect to \"${i}\" and continue? " -n 1 -r
       echo
       if [[ $REPLY =~ ^[Yy]$ ]]; then
-        run_main_content $i "prod"
+        run_main_content "$i" "prod"
       fi
     else
-      run_main_content $i "prod"
+      run_main_content "$i" "prod"
     fi
   done
 }
@@ -163,10 +163,10 @@ install_test () {
       read -p "Would you like to connect to \"${i}\" and continue? " -n 1 -r
       echo
       if [[ $REPLY =~ ^[Yy]$ ]]; then
-        run_main_content $i "test"
+        run_main_content "$i" "test"
       fi
     else
-      run_main_content $i "test"
+      run_main_content "$i" "test"
     fi
   done
 }
@@ -174,7 +174,7 @@ install_test () {
 ssh_to_server () {
   local HOST_NAME=$1
 
-  ssh -T $HOST_NAME <<-ENDSSH
+  ssh -T "$HOST_NAME" <<-"ENDSSH"
 if [ "${RUN_ONLY}" != "true" ]; then
   echo "Updating chef-client to the latest version of chef-client v${CHEF_VERSION}."
   mkdir chef_install
@@ -223,7 +223,7 @@ run_main_content () {
 
   echo "Connecting to \"${HOST_NAME}\"..."
   echo
-  ssh_to_server $HOST_NAME
+  ssh_to_server "$HOST_NAME"
   if [ $? -ne 0 ]; then
     echo "Failed to connect to \"${HOST_NAME}\"."
     exit 1
@@ -231,7 +231,7 @@ run_main_content () {
   echo
   if [ "${DOWNLOAD_LOGS}" == "true" ]; then
     echo "Downloading logs..."
-    downloadLog $HOST_NAME $TYPE_OF_RUN
+    downloadLog "$HOST_NAME" "$TYPE_OF_RUN"
     echo
     echo "<===================================================================>"
     echo "              Logs are available in"
@@ -258,7 +258,7 @@ run_main_content () {
     echo
   fi
   echo "Cleaning up..."
-  cleanup $HOST_NAME
+  cleanup "$HOST_NAME"
   echo "Cleanup complete."
   echo
   echo
@@ -280,30 +280,30 @@ create_log_dirs () {
   if [ "${ENV}" == "stage" ] || [ "${ENV}" == "test" ]; then
     if [ "${INSTALL}" == "true" ]; then
       if [ ! -d "${STAGE_LOG_DIR_UP}" ]; then
-        mkdir ${STAGE_LOG_DIR_UP}
+        mkdir "${STAGE_LOG_DIR_UP}"
       fi
     else
       if [ ! -d "${STAGE_LOG_DIR_RUN}" ]; then
-        mkdir ${STAGE_LOG_DIR_RUN}
+        mkdir "${STAGE_LOG_DIR_RUN}"
       fi
     fi
   fi
   if [ "${ENV}" == "prod" ]; then
     if [ "${INSTALL}" == "true" ]; then
       if [ ! -d "${PROD_LOG_DIR_UP}" ]; then
-        mkdir ${PROD_LOG_DIR_UP}
+        mkdir "${PROD_LOG_DIR_UP}"
       fi
     else
       if [ ! -d "${PROD_LOG_DIR_RUN}" ]; then
-        mkdir ${PROD_LOG_DIR_RUN}
+        mkdir "${PROD_LOG_DIR_RUN}"
       fi
     fi
   fi
 
-  if [ ! -z "${SERVER}" ]; then
+  if [ -n "${SERVER}" ]; then
     if [ "${INSTALL}" == "true" ]; then
       if [ ! -d "${SINGLE_RUN_LOG_DIR_UP}" ]; then
-        mkdir ${SINGLE_RUN_LOG_DIR_UP}
+        mkdir "${SINGLE_RUN_LOG_DIR_UP}"
       fi
     else
       if [ ! -d "${SINGLE_RUN_LOG_DIR_RUN}" ]; then
@@ -319,24 +319,24 @@ make_vars_lowercase () {
 }
 
 usage () {
-  echo "Usage: ./update-run_chef-client.sh [-v chef_version] [-e environment] [-s server_name] [-a] [-p] [-c] [-r] [-w] [-h] [-l]"
+  echo "Usage: ${0} [-v chef_version] [-e environment] [-s server_name] [-a] [-p] [-c] [-r] [-w] [-h] [-l]"
   echo
-  echo "    ./update-run_chef-client.sh -v chef_version      Whole number versions are accepted (i.e. 15, 16, 17, etc.)"
-  echo "    ./update-run_chef-client.sh -e environment       For batch-install, specify 'stage' or 'prod'."
-  echo "    ./update-run_chef-client.sh -s server_name       One-time install of chef-client on specified server."
-  echo "    ./update-run_chef-client.sh -a                   Accept Chef-client license agreement."
-  echo "    ./update-run_chef-client.sh -p                   Accept Chef-client license agreement, this time only."
-  echo "    ./update-run_chef-client.sh -c                   Confirm execution of actions."
-  echo "    ./update-run_chef-client.sh -r                   Don't install 'chef-client', just run it."
-  echo "    ./update-run_chef-client.sh -w                   Run 'chef-client' with the '--why-run' option."
-  echo "    ./update-run_chef-client.sh -l                   Download logs."
-  echo "    ./update-run_chef-client.sh -h                   Display this help message."
+  echo "    ${0} -v chef_version      Whole number versions are accepted (i.e. 15, 16, 17, etc.)"
+  echo "    ${0} -e environment       For batch-install, specify 'stage' or 'prod'."
+  echo "    ${0} -s server_name       One-time install of chef-client on specified server."
+  echo "    ${0} -a                   Accept Chef-client license agreement."
+  echo "    ${0} -p                   Accept Chef-client license agreement, this time only."
+  echo "    ${0} -c                   Confirm execution of actions."
+  echo "    ${0} -r                   Don't install 'chef-client', just run it."
+  echo "    ${0} -w                   Run 'chef-client' with the '--why-run' option."
+  echo "    ${0} -l                   Download logs."
+  echo "    ${0} -h                   Display this help message."
   echo
   echo "    Examples:"
-  echo "              ./update-run_chef-client.sh -v 14 -e prod"
-  echo "              ./update-run_chef-client.sh -v 14 -e prod -a"
-  echo "              ./update-run_chef-client.sh -v 15 -s stage-server1"
-  exit 0
+  echo "              ${0} -v 14 -e prod"
+  echo "              ${0} -v 14 -e prod -a"
+  echo "              ${0} -v 15 -s stage-server1"
+  # exit 0
 }
 
 run_server_decision () {
@@ -405,36 +405,40 @@ shift $((OPTIND -1))
 if [ "${ACCEPT_LICENSE_NO_PERSIST}" == "true" ] && [ "${ACCEPT_LICENSE}" == "true" ]; then
   echo "You cannot specify both '-a' AND '-p' options -- please choose one or the other."
   exit 0
-elif [ ! -z "${CHEF_VERSION}" ] && [ "${RUN_ONLY}" == "true" ]; then
+elif [ -n "${CHEF_VERSION}" ] && [ "${RUN_ONLY}" == "true" ]; then
   echo "You cannot specify both '-v chef_version' AND '-r' options -- please choose one or the other."
   exit 0
-elif [ ! -z "${SERVER}" ] && ( [ ! -z "${CHEF_VERSION}" ] || [ ! -z "${RUN_ONLY}" ] ); then
+elif [ -n "${SERVER}" ] && { [ -n "${CHEF_VERSION}" ] || [ -n "${RUN_ONLY}" ]; }; then
   make_vars_lowercase
   if [ "${DOWNLOAD_LOGS}" == "true" ]; then
     create_log_dirs
   fi
   onetime_run
-elif [ ! -z "${ENV}" ] && ( [ ! -z "${CHEF_VERSION}" ] || [ ! -z "${RUN_ONLY}" ] ); then
+elif [ -n "${ENV}" ] && { [ -n "${CHEF_VERSION}" ] || [ -n "${RUN_ONLY}" ]; }; then
   make_vars_lowercase
   if [ "${DOWNLOAD_LOGS}" == "true" ]; then
     create_log_dirs
   fi
   run_server_decision
-elif [ ! -z "${CHEF_VERSION}" ]; then
+elif [ -n "${CHEF_VERSION}" ]; then
   echo "Incorrect usage. You must also specify an \"environment\" OR \"server_name\"."
   echo
   usage
-elif [ ! -z "${SERVER}" ]; then
+  exit 0
+elif [ -n "${SERVER}" ]; then
   echo "Incorrect usage. You must also specify a \"chef_version\" OR the \"run-only\" option (-r)."
   echo
   usage
-elif [ ! -z "${ENV}" ]; then
+  exit 0
+elif [ -n "${ENV}" ]; then
   echo "Incorrect usage. You must also specify a \"chef_version\" OR the \"run-only\" option (-r)."
   echo
   usage
+  exit 0
 else
   echo "Incorrect usage."
   echo
   usage
+  exit 0
 fi
 

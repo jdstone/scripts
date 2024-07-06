@@ -33,17 +33,17 @@ NC='\033[0m'
 main () {
   local i=0
 
-  cd "$movie_root"
+  cd "$movie_root" || exit
 
   echo
-  printf "${RED}!!!!  $(pwd) -- Are you sure you want to continue with this movie directory?  !!!!${NC}\n"
+  echo -e "${RED}!!!!  $(pwd) -- Are you sure you want to continue with this movie directory?  !!!!${NC}"
 
-  read -p "Press Ctrl-C to exit or Enter to continue"
+  read -r -p "Press Ctrl-C to exit or Enter to continue"
   echo
-  read -p "Are you sure you pressed the correct key (Ctrl-C to exit or Enter to continue)?"
-  printf "\n\n"
+  read -r -p "Are you sure you pressed the correct key (Ctrl-C to exit or Enter to continue)?"
+  echo; echo;
 
-  echo $(echo !==== Creating the new movie directory structure and copying movies to their new location ====! | tr [:lower:] [:upper:])
+  echo "!==== Creating the new movie directory structure and copying movies to their new location ====!" | tr "[:lower:]" "[:upper:]"
   echo
   echo
 
@@ -51,12 +51,12 @@ main () {
   for file in *.mkv *.mp4 *.avi; do
     base_filename=$file
 
-    if [ $i = $directory_file_count_limit ]; then break; fi
+    if [ "$i" -eq "$directory_file_count_limit" ]; then break; fi
 
-    if ! ( [ "$base_filename" = "*.mkv" ] || [ "$base_filename" = "*.mp4" ] || [ "$base_filename" = "*.avi" ] ); then
+    if ! { [ "$base_filename" = "*.mkv" ] || [ "$base_filename" = "*.mp4" ] || [ "$base_filename" = "*.avi" ]; }; then
       movie_root_filename=$(echo $base_filename | sed 's/\.\///' | cut -d "(" -f 1 | sed 's/\.$//')
       movie_titlename=$(echo $movie_root_filename | sed 's/\./ /g')
-      movie_titlename_upper=$(echo $movie_titlename | tr [:lower:] [:upper:])
+      movie_titlename_upper=$(echo "$movie_titlename" | tr "[:lower:]" "[:upper:]")
       file_name_wo_ext=${base_filename%.*}
       echo ===========================================================================
       echo "Processing $movie_titlename_upper"
@@ -77,9 +77,9 @@ main () {
   echo
 
   if [ $i -gt 1 ] || [ $i -eq 0 ]; then
-    echo "$i movies were processed." && printf "\n\n"
+    echo "$i movies were processed." && echo; echo;
   elif [ $i -eq 1 ]; then
-    echo "$i movie was processed." && printf "\n\n"
+    echo "$i movie was processed." && echo; echo;
   fi
 }
 
@@ -98,11 +98,11 @@ usage () {
 while getopts "c:d:h" opt; do
   case ${opt} in
     c )
-      opt_c=1
+      # opt_c=1
       directory_file_count_limit=${OPTARG}
       if [[ ( ! ${directory_file_count_limit} =~ ^[0-9]+$ ) ]]; then
-        printf "${RED}[!]${NC}  ${OPTARG} is an invalid argument for option -${opt}\n" 1>&2
-        printf "${RED}[!]${NC}  a file count (number) must be specified when using the -${opt} option\n"
+        echo -e "${RED}[!]${NC}  ${OPTARG} is an invalid argument for option -${opt}" 1>&2
+        echo -e "${RED}[!]${NC}  a file count (number) must be specified when using the -${opt} option"
         echo
         usage
         exit 1
@@ -112,7 +112,7 @@ while getopts "c:d:h" opt; do
       opt_d=1
       movie_root="${OPTARG}"
       if [[ ! -d "${movie_root}" ]]; then
-        printf "${RED}[!]${NC}  '${movie_root}' is not a valid directory\n"
+        echo -e "${RED}[!]${NC}  '${movie_root}' is not a valid directory"
         echo
         usage
         exit 1
@@ -121,10 +121,10 @@ while getopts "c:d:h" opt; do
     : )
       echo "illegal option -- ${OPTARG} requires an argument" 1>&2
       if [[ "${OPTARG}" == "d" ]]; then
-        printf "${RED}[!]${NC}  a directory must be specified when using the -${opt} option\n"
+        echo -e "${RED}[!]${NC}  a directory must be specified when using the -${opt} option\n"
         echo
       elif [[ "${OPTARG}" == "c" ]]; then
-        printf "${RED}[!]${NC}  a file count (number) must be specified when using the -${opt} option\n"
+        echo -e "${RED}[!]${NC}  a file count (number) must be specified when using the -${opt} option\n"
         echo
       else
         echo
@@ -132,7 +132,7 @@ while getopts "c:d:h" opt; do
       usage
       exit 1
       ;;
-    * | h )
+    h | * )
       echo
       usage
       exit 0

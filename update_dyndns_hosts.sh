@@ -3,8 +3,8 @@
 #title            :update_dyndns_hosts.sh
 #description      :Update the IP address of the specified subdomains registered with Namecheap.com.
 #author           :J.D. Stone
-#date             :20240504
-#version          :0.5
+#date             :20240705
+#version          :0.6.0
 #usage            :Add your domain and subdomain(s) below and run script.
 #notes            :Curl must be installed
 
@@ -21,11 +21,11 @@ PASSWORD=""
 # Loop through each subdomain. If the domain's
 #  IP is different than my current public IP,
 #  update the IP address.
-for i in "${SUB_DOMAINS[@]}"; do
-    SUB_DOMAIN_IP="$(dig $i.${DOMAIN} +short)"
+for subdomain in "${SUB_DOMAINS[@]}"; do
+    SUB_DOMAIN_IP="$(dig "${subdomain}"."${DOMAIN}" +short)"
 
     if [ "${SUB_DOMAIN_IP}" != "${CURRENT_PUBLIC_IP}" ]; then
-        curl -s -G --data-urlencode domain=${DOMAIN} --data-urlencode password=${PASSWORD} --data-urlencode host=${i} https://dynamicdns.park-your-domain.com/update?ip=${CURRENT_PUBLIC_IP} 1> /dev/null
+        curl -s -G --data-urlencode domain="${DOMAIN}" --data-urlencode password="${PASSWORD}" --data-urlencode host="${subdomain}" https://dynamicdns.park-your-domain.com/update?ip="${CURRENT_PUBLIC_IP}" 1> /dev/null
     fi
 done
 
